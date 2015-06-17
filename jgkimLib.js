@@ -1,5 +1,15 @@
-var JGKIMLib = (function(JGKIMLib, $, undefined){
-    var 서브 객체 = function (_id, _value){ this.id = _id;
+var JGKIMLib = (function(JGKIMLib, $, undefined) {
+
+    var object = {
+        name : "object",
+        age : 22,
+        getName : function() {
+            console.log("my name is " + name);
+            console.log(this);
+        }
+    };
+
+    var Calculator = function (_id, _value) { this.id = _id;
         this.value = _value;
     };
     return JGKIMLib; // 리턴을 해야함
