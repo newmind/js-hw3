@@ -3,8 +3,125 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
+    <link rel="stylesheet" type="text/css" media="screen" href="jquery-ui-1.11.4.custom/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="jqGrid/css/ui.jqgrid.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="jqGrid/js/jquery.jqGrid.src.js"></script>
+    <script src="Highcharts-4.1.6/js/highcharts.js"></script>
+    <script src="Highcharts-4.1.6/js/highcharts-more.js"></script>
+
 </head>
 <body>
 
+<table id="list">
+
+</table>
+
+<div id="chartArea" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+</div>
+
 </body>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        var dataNewYork = [-0.2, 0.8, 5.7, 11.3, 17, 22, 24.8, 24.1, 14.1, 8.6, 2.5];
+        var dataLondon  = [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17, 16.6, 14.2, 10.3, 6.6, 4.8];
+
+        // 가상의 local json data
+        var gridData = [
+            {area:"New York" },
+            {area:"London" }
+        ];
+
+        for (var i = 0; i <= dataNewYork.length; ++i) {
+            gridData[0][month[i]] = dataNewYork[i];
+        }
+        for (var i = 0; i <= dataLondon.length; ++i) {
+            gridData[1][month[i]] = dataLondon[i];
+        }
+
+        // jqGrid 껍데기 생성
+        $("#list").jqGrid({
+            datatype: "local", // 로컬 그리드이용
+            height: 250,  // 그리드 높이
+            //column: $.merge(['Area'], month),
+            column: ['Area', 'mon'],
+            //컬럼모델
+            colModel: [
+                {name:'area'},
+                {name:month[0]},
+                {name:month[1]},
+                {name:month[2]},
+                {name:month[3]},
+                {name:month[4]},
+                {name:month[5]},
+                {name:month[6]},
+                {name:month[7]},
+                {name:month[8]},
+                {name:month[9]},
+                {name:month[10]},
+                {name:month[11]}
+            ],
+            // 그리드 타이틀
+            caption: "Monthly Average Temperature",
+
+            autowidth:true
+        });
+
+        // 로컬 데이터의 길이만큼 각 그리기
+        for (var i = 0; i <= gridData.length; ++i) {
+            // jqgrid의 addRowData를 이용하여 각각의 row에 gridData변수의 데이터를 add한다.
+            $("#list").jqGrid('addRowData', i+1, gridData[i]);
+        }
+
+        $('#chartArea').highcharts({
+            title: {
+                text: 'Monthly Average Temperature',
+                x: -20 //center
+            },
+            subtitle: {
+                text: 'Source: WorldClimate.com',
+                x: -20
+            },
+            xAxis: {
+                categories: month
+            },
+            yAxis: {
+                title: {
+                    text: 'Temperature (°C)'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: '°C'
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [
+                {
+                    name: 'New York',
+                    data: dataNewYork
+                }, {
+                    name: 'London',
+                    data: dataLondon
+                }
+            ]
+        });
+
+    })
+</script>
 </html>
